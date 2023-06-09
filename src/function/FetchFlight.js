@@ -21,8 +21,9 @@ async function fetchFlight(param){
 				return mockedResponse;
 			});
 	}catch(e){
-		const mockedResponse= [flightmockedData]
-		return mockedResponse;
+		//const mockedResponse= [flightmockedData]
+		//return mockedResponse;
+		return null;
 	}
 }	
 export default fetchFlight;
