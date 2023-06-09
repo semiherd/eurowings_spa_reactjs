@@ -1,13 +1,13 @@
-import apiHeader from './apiHeader';
+import ApiHeader from './ApiHeader';
 import fetchAirport from './FetchAirport';
 import axios from 'axios';
 
 async function fetchDestination(param){
 	try{
-		const response= await axios
+		return axios
 			.get(
 				'https://api.lufthansa.com/v1/mds-references/cities/'+param+'?lang=en&limit=5&offset=0',
-				{headers: apiHeader}
+				{headers: ApiHeader}
 			)
 			.then(async response => {
 				const city= response.data.CityResource.Cities.City;
@@ -37,7 +37,6 @@ async function fetchDestination(param){
 				console.log('fetchDestination error:',error)
 				return null;
 			});
-		return response
 	}catch(e){
 		console.log(e)
 	}

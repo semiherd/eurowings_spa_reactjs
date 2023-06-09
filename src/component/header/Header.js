@@ -1,12 +1,11 @@
 import React from 'react';
-import companylogo from '../../asset/image/eurowings.png'
+import {eurowings} from '../../asset/index';
 
 const Header= () => {
 	return (
 		<div>
-			<img data-testid="headerImg" src={companylogo} alt="Logo" />
-		</div>
-		
+			<img data-testid="headerImg" src={eurowings} alt="Logo" />
+		</div>		
 	)
 }
 export default Header

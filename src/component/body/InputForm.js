@@ -5,11 +5,11 @@ import fetchDestination from '../../function/FetchDestination';
 import RangePicker from '../filter/RangePicker';
 import '../../style/App.css';
 
-
-function InputForm({handleSearch}) {
+function InputForm({handleSearch,setProgress}) {
 	const searchState= useSearchState();
 	const searchDispatch= useSearchDispatch();
-	
+	const falseInfoObj= {state: false, message:null}
+
 	async function updateContext(param){
 		try{
 			await searchDispatch({
@@ -20,54 +20,32 @@ function InputForm({handleSearch}) {
 			console.log(e)
 		}
 	}
-
-	useEffect(() => {
-		if(searchState?.from?.length>2) {
-			fetchDestination(searchState.from).then(async (response) => {
-				if(response==null) {
-					searchDispatch({
-						type: 'createInfo',
-						data: {
-							state:true,
-							message:'No Airport can be found'
-						}
-					})
-				}else updateContext({type:'fetchDepartureAirport',data:response})
+	
+	async function handleDestinationCall(type,contextType){
+		try{
+			setProgress(true)
+			await fetchDestination(searchState[type]).then(async (response) => {
+				let payload= {}
+				if(response==null) 
+					payload= {state: true, message: 'No Airport can be found'}
+				else payload= response
+				await updateContext({type:contextType,data:payload})
 			})
-		}else {
-			searchDispatch({
-				type: 'createInfo',
-				data: {
-					state:false,
-					message:null
-				}
-			})
+		}catch(e){
+			console.log(e)
 		}
+		finally{
+			setProgress(false)
+		}
+	}
+	useEffect(() => {
+		if(searchState?.from?.length>2) handleDestinationCall('from','fetchDepartureAirport')
+		else updateContext({type:'createInfo',data: falseInfoObj})
 	},[searchState.from])
 
 	useEffect(() => {
-		if(searchState?.to?.length>2) {
-			fetchDestination(searchState.to).then(async (response) => {
-				if(response==null){
-					searchDispatch({
-						type: 'createInfo',
-						data: {
-							state:true,
-							message:'No Airport can be found'
-						}
-					})
-				}else updateContext({type:'fetchArrivalAirport',data:response})
-			}
-			)
-		}else {
-			searchDispatch({
-				type: 'createInfo',
-				data: {
-					state:false,
-					message:null
-				}
-			})
-		}
+		if(searchState?.to?.length>2) handleDestinationCall('to','fetchArrivalAirport')
+		else updateContext({type:'createInfo',data: falseInfoObj})
 	},[searchState.to])
 
 	return (

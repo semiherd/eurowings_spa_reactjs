@@ -37,7 +37,6 @@ function Body() {
 				returnDate: searchState.date.return
 			}
 			const response= await fetchFlight(param)
-			console.log('fetchFlight response:',response)
 			if(response!=null){
 				setNoResponse({state:false,message:null})
 				await updateContext({
@@ -47,6 +46,10 @@ function Body() {
 			}else setNoResponse({state:true,message:'No Flights Found'})
 		}catch(e){
 			setProgress(false)
+			await updateContext({
+				type: 'updateFlight',
+				data: null
+			})
 		}
 		finally{
 			setProgress(false)
@@ -55,9 +58,9 @@ function Body() {
 
 	return (   	
 		<div className="search">
-			<InputForm progress={progress} noResponse={noResponse} handleSearch={fetchResult} />
+			<InputForm setProgress={setProgress} handleSearch={fetchResult} />
 			<NoResponse progress={progress} noResponse={noResponse} />
-			{searchState.to && searchState.from && searchState?.flight?.length>0 && 
+			{searchState.to && searchState.from && searchState?.flight?.length && 
 				<div className="flight-list"><List /></div>
 			}				
 		</div>

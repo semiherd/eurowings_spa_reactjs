@@ -1,15 +1,14 @@
-import apiHeader from './apiHeader';
+import ApiHeader from './ApiHeader';
 import axios from 'axios';
 
 async function fetchAirport(param){
 	try{			
-		const response= await axios
+		return axios
 			.get(
 				'https://api.lufthansa.com/v1/mds-references/airports/'+param+'?lang=en&limit=10&offset=0&&LHoperated=1',
-				{headers: apiHeader}
+				{headers: ApiHeader}
 			)
 			.then(async response => {
-				console.log('fetchairport response',response)			
 				if(response.data){
 					const data= response.data.AirportResource.Airports.Airport
 					const obj= {
@@ -24,8 +23,6 @@ async function fetchAirport(param){
 				console.error(error);
 			});
 		
-		if(response!=null) return response
-		else return null
 	}catch(e){
 		console.log('fetchAirport error:',e)
 		return null

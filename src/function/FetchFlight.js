@@ -1,4 +1,4 @@
-import apiHeader from './apiHeader';
+import ApiHeader from './ApiHeader';
 import axios from 'axios';
 import flightmockedData from '../__mock__/FlightApi';
 
@@ -6,10 +6,10 @@ async function fetchFlight(param){
 	try{
 		const baseUrl= 'https://api.lufthansa.com/v1/promotions/priceoffers/flights/ond'
 		const {from,to,departureDate,returnDate}=param;
-		const response= await axios
+		return axios
 			.get(
 				baseUrl+'/{'+from+'}/{'+to+'}?departureDate='+departureDate+'&returnDate='+returnDate,
-				{headers: apiHeader}
+				{headers: ApiHeader}
 			)
 			.then(async response => {
 				console.log('response api:',response)
@@ -20,10 +20,9 @@ async function fetchFlight(param){
 				const mockedResponse= [flightmockedData]
 				return mockedResponse;
 			});
-		return response
 	}catch(e){
 		const mockedResponse= [flightmockedData]
 		return mockedResponse;
 	}
-}
+}	
 export default fetchFlight;
